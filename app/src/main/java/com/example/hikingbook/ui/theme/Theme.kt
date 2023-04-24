@@ -54,10 +54,12 @@ fun HikingbookTheme(
     }
     val view = LocalView.current
     if (!view.isInEditMode) {
-        SideEffect {
-            (view.context as Activity).window.statusBarColor = colorScheme.primary.toArgb()
-            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = darkTheme
-        }
+
+//        SideEffect {
+//            (view.context as Activity).window.statusBarColor = colorScheme.primary.toArgb()
+//            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = darkTheme
+//        }
+
     }
 
     MaterialTheme(

@@ -1,5 +1,9 @@
 package com.example.hikingbook
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,7 +18,7 @@ class MainViewModel @Inject constructor(
     private val taskDao: TaskDao
 ) : ViewModel() {
 
-    // test
+    // Room
     val allTasks: LiveData<List<Task>> = taskDao.getAllTasks()
 
     fun insertTask(task: Task) = viewModelScope.launch {
@@ -28,4 +32,15 @@ class MainViewModel @Inject constructor(
     fun updateTask(task: Task) = viewModelScope.launch {
         taskDao.updateTask(task)
     }
+
+
+    /** UI */
+    var route by mutableStateOf(Route.MAIN)
+
+    // New Task Page
+
+}
+
+enum class Route {
+    MAIN, NEW_TASK
 }

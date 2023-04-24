@@ -12,8 +12,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.hikingbook.data.task.Task
+import com.example.hikingbook.ui.MainPage
+import com.example.hikingbook.ui.navigation.MainNavigation
+import com.example.hikingbook.ui.page.NewTaskPage
 import com.example.hikingbook.ui.theme.HikingbookTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -27,6 +31,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         setContent {
             HikingbookTheme {
                 // A surface container using the 'background' color from the theme
@@ -34,12 +41,16 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+//                    Greeting("Android")
+//                    MainPage()
+//                    NewTaskPage()
+                    MainNavigation()
                 }
             }
         }
 
-        roomTest()
+
+//        roomTest()
     }
 
     private fun roomTest() {

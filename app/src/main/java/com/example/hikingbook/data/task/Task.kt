@@ -16,3 +16,13 @@ data class Task(
     val dueDate: String,
     val locationCoordinate: String
 )
+
+object TaskObj {
+    val obj = Task(
+        title = "title",
+        description = "description",
+        createdDate = "2023/04/24",
+        dueDate = "2023/04/25",
+        locationCoordinate = "25.0174719, 121.3662922"
+    )
+}
