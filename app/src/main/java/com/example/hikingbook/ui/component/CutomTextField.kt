@@ -24,7 +24,12 @@ fun ColumnScope.CustomTextField(
     label: String? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 
+    isError: Boolean = false,
+    notError: () -> Unit = {},
+
+
     clickForOperate: (() -> Unit)? = null
+
 
 ) {
 
@@ -32,10 +37,18 @@ fun ColumnScope.CustomTextField(
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier
+                .fillMaxWidth()
+                .onFocusChanged {
+                    if (it.isFocused) {
+                        notError()
+                    }
+                },
 
             label = { label?.let { Text(text = it) } },
+            isError = isError,
             trailingIcon = trailingIcon
+
         )
     } else {
         OutlinedTextField(
@@ -48,10 +61,12 @@ fun ColumnScope.CustomTextField(
                         clickForOperate()
                     }
                 },
-            readOnly = false,
+            readOnly = true,
 
             label = { label?.let { Text(text = it) } },
-            trailingIcon = trailingIcon
+            trailingIcon = trailingIcon,
+
+            isError = isError
         )
     }
 }
@@ -67,6 +82,10 @@ fun RowScope.CustomTextField(
     label: String? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 
+    isError: Boolean = false,
+    notError: () -> Unit = {},
+
+
     clickForOperate: (() -> Unit)? = null
 
 ) {
@@ -75,10 +94,17 @@ fun RowScope.CustomTextField(
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            modifier = modifier.weight(1f),
+            modifier = modifier.weight(1f)
+                .onFocusChanged {
+                    if (it.isFocused) {
+                        notError()
+                    }
+                },
 
             label = { label?.let { Text(text = it) } },
-            trailingIcon = trailingIcon
+            trailingIcon = trailingIcon,
+
+            isError = isError
         )
     } else {
         OutlinedTextField(
@@ -94,7 +120,9 @@ fun RowScope.CustomTextField(
             readOnly = true,
 
             label = { label?.let { Text(text = it) } },
-            trailingIcon = trailingIcon
+            trailingIcon = trailingIcon,
+
+            isError = isError
         )
     }
 }

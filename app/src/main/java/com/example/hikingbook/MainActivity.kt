@@ -1,5 +1,6 @@
 package com.example.hikingbook
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -12,11 +13,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.hikingbook.data.task.Task
 import com.example.hikingbook.ui.MainPage
 import com.example.hikingbook.ui.navigation.MainNavigation
+import com.example.hikingbook.ui.page.Map
 import com.example.hikingbook.ui.page.NewTaskPage
 import com.example.hikingbook.ui.theme.HikingbookTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,6 +30,8 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val locationPermissionRequestCode = 0
 
     private val viewModel: MainViewModel by viewModels()
 
@@ -45,12 +51,41 @@ class MainActivity : ComponentActivity() {
 //                    MainPage()
 //                    NewTaskPage()
                     MainNavigation()
+//                    Map()
                 }
             }
         }
 
 
+        checkAndRequestLocationPermission()
 //        roomTest()
+    }
+
+    private fun checkAndRequestLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                locationPermissionRequestCode
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == locationPermissionRequestCode) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, you can use the location now
+            } else {
+                // Permission denied, you can show an error message or handle it accordingly
+            }
+        }
     }
 
     private fun roomTest() {
@@ -90,18 +125,5 @@ class MainActivity : ComponentActivity() {
                 viewModel.updateTask(updatedTask)
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    HikingbookTheme {
-        Greeting("Android")
     }
 }

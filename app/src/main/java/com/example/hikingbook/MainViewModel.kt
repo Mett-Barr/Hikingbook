@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hikingbook.data.task.Task
 import com.example.hikingbook.data.task.TaskDao
+import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,10 +38,13 @@ class MainViewModel @Inject constructor(
     /** UI */
     var route by mutableStateOf(Route.MAIN)
 
+    private val singapore = LatLng(1.35, 103.87)
+    var location by mutableStateOf(singapore)
+
     // New Task Page
 
 }
 
 enum class Route {
-    MAIN, NEW_TASK
+    MAIN, NEW_TASK, MAP
 }
