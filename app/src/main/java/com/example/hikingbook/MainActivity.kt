@@ -18,10 +18,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.hikingbook.data.task.Task
+import com.example.hikingbook.tool.toLongDate
 import com.example.hikingbook.ui.MainPage
 import com.example.hikingbook.ui.navigation.MainNavigation
 import com.example.hikingbook.ui.page.Map
 import com.example.hikingbook.ui.page.NewTaskPage
+import com.example.hikingbook.ui.page.ONE_DAY
 import com.example.hikingbook.ui.theme.HikingbookTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -59,6 +61,7 @@ class MainActivity : ComponentActivity() {
 
         checkAndRequestLocationPermission()
 //        roomTest()
+//        roomTestData()
     }
 
     private fun checkAndRequestLocationPermission() {
@@ -102,8 +105,8 @@ class MainActivity : ComponentActivity() {
                 val newTask = Task(
                     title = "Test Task $i",
                     description = "This is test task $i.",
-                    createdDate = "2023-04-${24 + i}",
-                    dueDate = "2023-04-${25 + i}",
+                    createdDate = "2023-04-${24 + i}".toLongDate(),
+                    dueDate = "2023-04-${25 + i}".toLongDate(),
                     locationCoordinate = "25.0174719, 121.3662922"
                 )
                 viewModel.insertTask(newTask)
@@ -123,6 +126,21 @@ class MainActivity : ComponentActivity() {
             viewModel.allTasks.value?.getOrNull(1)?.let { secondTask ->
                 val updatedTask = secondTask.copy(title = "Updated Task 2")
                 viewModel.updateTask(updatedTask)
+            }
+        }
+    }
+
+    private fun roomTestData() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            for (i in 0..20) {
+                val newTask = Task(
+                    title = "Test Task $i",
+                    description = "This is test task $i.",
+                    createdDate = System.currentTimeMillis(),
+                    dueDate = System.currentTimeMillis()  + ONE_DAY,
+                    locationCoordinate = "25.0174719, 121.3662922"
+                )
+                viewModel.insertTask(newTask)
             }
         }
     }

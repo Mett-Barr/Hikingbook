@@ -18,6 +18,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.hikingbook.Route
+import com.example.hikingbook.tool.toLatLng
 import com.example.hikingbook.ui.component.TaskCard
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,7 +59,11 @@ fun MainPage(
 //            )
         ) {
             items(list ?: emptyList()) {
-                TaskCard(task = it)
+                TaskCard(task = it) {
+                    viewModel.editedTask = it
+                    viewModel.location = viewModel.editedTask.locationCoordinate.toLatLng() ?: viewModel.singapore
+                    viewModel.navigate(Route.EDIT_TASK)
+                }
             }
         }
     }

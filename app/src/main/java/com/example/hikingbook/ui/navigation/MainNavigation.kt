@@ -12,6 +12,7 @@ import com.example.hikingbook.ui.MainPage
 import com.example.hikingbook.ui.page.NewTaskPage
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.hikingbook.Route
+import com.example.hikingbook.ui.page.EditTaskPage
 import com.example.hikingbook.ui.page.Map
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
@@ -20,7 +21,6 @@ import com.google.android.gms.maps.model.LatLng
 fun MainNavigation(
     viewModel: MainViewModel = viewModel()
 ) {
-
 
 
     AnimatedContent(targetState = viewModel.route) {
@@ -34,15 +34,32 @@ fun MainNavigation(
             Route.MAP -> {
                 Map()
             }
+            Route.EDIT_TASK -> {
+                EditTaskPage()
+            }
         }
     }
 
     BackHandler(viewModel.route != Route.MAIN) {
-        if (viewModel.route == Route.NEW_TASK) {
-            viewModel.route = Route.MAIN
-        } else if (viewModel.route == Route.MAP) {
-            viewModel.route = Route.NEW_TASK
-        }
+        viewModel.navigateBack()
+//        when (viewModel.route) {
+//            Route.MAIN -> {}
+//            Route.NEW_TASK -> viewModel.navigate(Route.MAIN)
+//            Route.MAP -> {
+//                if (viewModel.lastRoute == Route.NEW_TASK) {
+//                    viewModel.navigate(Route.NEW_TASK)
+//                } else {
+//                    viewModel.navigate(Route.EDIT_TASK)
+//                }
+//            }
+//            Route.EDIT_TASK -> viewModel.navigate(Route.MAIN)
+//        if (viewModel.route == Route.NEW_TASK) {
+//            viewModel.route = Route.MAIN
+//        } else if (viewModel.route == Route.MAP) {
+//            viewModel.route = Route.NEW_TASK
+//        } else if (viewModel.route == Route.EDIT_TASK) {
+//            viewModel
+//        }
     }
 }
 

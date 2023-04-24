@@ -17,18 +17,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hikingbook.data.task.Task
 import com.example.hikingbook.data.task.TaskObj
+import com.example.hikingbook.tool.toStringDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskCard(task: Task) {
-    Card(onClick = {  }) {
+fun TaskCard(task: Task, onClick: () -> Unit = {}) {
+    Card(onClick = onClick) {
         Column(modifier = Modifier.padding(16.dp)) {
             task.apply {
                 Text(text = title, fontSize = 28.sp, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
                 Text(text = description)
                 Row() {
-                    Text(text = createdDate, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
-                    Text(text = dueDate, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
+                    Text(text = createdDate.toStringDate(), style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
+                    Text(text = dueDate.toStringDate(), style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
                 }
                 Text(text = locationCoordinate, style = MaterialTheme.typography.bodySmall)
             }

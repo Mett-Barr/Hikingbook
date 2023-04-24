@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.constraintlayout.helper.widget.MotionPlaceholder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -20,6 +21,7 @@ fun ColumnScope.CustomTextField(
 
     value: String,
     onValueChange: (String) -> Unit,
+    placeholder: String = "",
 
     label: String? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
@@ -44,6 +46,7 @@ fun ColumnScope.CustomTextField(
                         notError()
                     }
                 },
+            placeholder = { Text(text = placeholder)},
 
             label = { label?.let { Text(text = it) } },
             isError = isError,
@@ -94,7 +97,8 @@ fun RowScope.CustomTextField(
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            modifier = modifier.weight(1f)
+            modifier = modifier
+                .weight(1f)
                 .onFocusChanged {
                     if (it.isFocused) {
                         notError()

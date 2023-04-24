@@ -73,11 +73,11 @@ fun Map(
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 ClickableIcon(painter = painterResource(id = R.drawable.arrow_back_fill0_wght400_grad0_opsz48)) {
-                    viewModel.route = Route.NEW_TASK
+                    viewModel.navigateBack()
                 }
                 ClickableIcon(painter = painterResource(id = R.drawable.done_fill0_wght400_grad0_opsz48)) {
                     viewModel.location = markerPosition
-                    viewModel.route = Route.NEW_TASK
+                    viewModel.navigateBack()
                 }
             }
         }

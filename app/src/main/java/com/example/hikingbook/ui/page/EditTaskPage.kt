@@ -1,10 +1,7 @@
 package com.example.hikingbook.ui.page
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
-import android.location.Location
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -16,29 +13,24 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import com.example.hikingbook.MainViewModel
-import com.example.hikingbook.tool.toStringDate
-import com.example.hikingbook.ui.component.CustomTextField
-import com.example.hikingbook.ui.component.OperationButton
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.hikingbook.Route
 import com.example.hikingbook.data.task.Task
+import com.example.hikingbook.tool.toStringDate
 import com.example.hikingbook.tool.toStringRepresentation
-import com.google.android.gms.location.FusedLocationProviderClient
+import com.example.hikingbook.ui.component.CustomTextField
+import com.example.hikingbook.ui.component.OperationButton
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.model.LatLng
-
-const val ONE_DAY = 86400 * 1000
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun NewTaskPage(
+fun EditTaskPage(
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel = viewModel()
+    viewModel: MainViewModel = viewModel(),
+//    task: Task
 ) {
 
 
@@ -74,14 +66,14 @@ fun NewTaskPage(
 
 
     var title by remember {
-        mutableStateOf("")
+        mutableStateOf(viewModel.editedTask.title)
     }
     var titleIsError by remember {
         mutableStateOf(false)
     }
 
     var description by remember {
-        mutableStateOf("")
+        mutableStateOf(viewModel.editedTask.description)
     }
     var descriptionIsError by remember {
         mutableStateOf(false)
@@ -89,10 +81,10 @@ fun NewTaskPage(
 
 
     var createdDate by remember {
-        mutableStateOf(System.currentTimeMillis())
+        mutableStateOf(viewModel.editedTask.createdDate)
     }
     var dueDate by remember {
-        mutableStateOf(System.currentTimeMillis() + ONE_DAY)
+        mutableStateOf(viewModel.editedTask.dueDate)
     }
     var isDialogShowing by remember {
         mutableStateOf(false)
@@ -112,7 +104,14 @@ fun NewTaskPage(
             .padding(horizontal = 32.dp),
         verticalArrangement = Arrangement.spacedBy(32.dp)
     ) {
-        Text(text = "New Task", style = MaterialTheme.typography.headlineLarge, modifier = Modifier.fillMaxWidth().padding(top = 32.dp), textAlign = TextAlign.Center)
+        Text(
+            text = "Edit Task",
+            style = MaterialTheme.typography.headlineLarge,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 32.dp),
+            textAlign = TextAlign.Center
+        )
         CustomTextField(
             value = title,
             onValueChange = { title = it },
@@ -168,15 +167,16 @@ fun NewTaskPage(
                     descriptionIsError = true
                 }
                 if (title.isNotBlank() && description.isNotBlank()) {
-                    // insert
-                    val task = Task(
-                        title = title,
-                        description = description,
-                        createdDate = createdDate,
-                        dueDate = dueDate,
-                        locationCoordinate = viewModel.location.toStringRepresentation()
+                    // update
+                    viewModel.updateTask(
+                        viewModel.editedTask.copy(
+                            title = title,
+                            description = description,
+                            createdDate = createdDate,
+                            dueDate = dueDate,
+                            locationCoordinate = viewModel.location.toStringRepresentation()
+                        )
                     )
-                    viewModel.insertTask(task)
                     viewModel.navigateBack()
                 }
             },
@@ -230,41 +230,5 @@ fun NewTaskPage(
             requester.requestFocus()
         }
     }
-}
 
-enum class CreatedOrDue {
-    CREATED, DUE, NONE
-}
-
-fun Context.getLastLocation(
-    fusedLocationClient: FusedLocationProviderClient,
-    location: (LatLng) -> Unit
-) {
-    if (ActivityCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ) != PackageManager.PERMISSION_GRANTED
-    ) {
-        // TODO: Consider calling
-        //    ActivityCompat#requestPermissions
-        // here to request the missing permissions, and then overriding
-        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-        //                                          int[] grantResults)
-        // to handle the case where the user grants the permission. See the documentation
-        // for ActivityCompat#requestPermissions for more details.
-        return
-    }
-    fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-        location?.let {
-            val latLng = LatLng(it.latitude, it.longitude)
-            // Use the latLng for your needs
-
-            location(latLng)
-        }
-    }.addOnFailureListener {
-        // Handle the failure case
-    }
 }
