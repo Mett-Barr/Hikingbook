@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
@@ -46,7 +47,11 @@ fun MainPage(
             FloatingActionButton(onClick = { viewModel.route = Route.NEW_TASK }) {
 //                Icon(painter = painterResource(id = ), contentDescription = )
 
-                Icon(imageVector = Icons.Rounded.Add, contentDescription = "add")
+                if (viewModel.allTasks.observeAsState().value?.isEmpty() != false) {
+                    Text(text = "  Click For New Task  ")
+                } else {
+                    Icon(imageVector = Icons.Rounded.Add, contentDescription = "add")
+                }
             }
         },
         topBar = {
