@@ -2,25 +2,33 @@ package com.example.hikingbook.ui.page
 
 import android.Manifest
 import android.content.pm.PackageManager
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.core.app.ActivityCompat
 import com.example.hikingbook.MainViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.hikingbook.R
 import com.example.hikingbook.Route
 import com.example.hikingbook.data.task.Task
 import com.example.hikingbook.tool.toStringDate
 import com.example.hikingbook.tool.toStringRepresentation
+import com.example.hikingbook.ui.component.ClickableIcon
 import com.example.hikingbook.ui.component.CustomTextField
 import com.example.hikingbook.ui.component.OperationButton
 import com.google.android.gms.location.LocationServices
@@ -93,6 +101,11 @@ fun EditTaskPage(
         mutableStateOf(CreatedOrDue.NONE)
     }
 
+    var isDeleteDialog by remember {
+        mutableStateOf(false)
+    }
+
+
     Column(
         modifier
             .systemBarsPadding()
@@ -158,6 +171,21 @@ fun EditTaskPage(
         }
 
         Spacer(modifier = Modifier.weight(1f))
+
+        Box(modifier = Modifier
+            .clip(RoundedCornerShape(16.dp))
+            .clickable {
+                isDeleteDialog = true
+            }
+            .background(MaterialTheme.colorScheme.errorContainer)
+            .padding(8.dp)) {
+            Icon(
+                painter = painterResource(id = R.drawable.delete_fill0_wght400_grad0_opsz48),
+                contentDescription = "",
+                modifier = Modifier.size(36.dp),
+                tint = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.errorContainer)
+            )
+        }
         OperationButton(
             clickOK = {
                 if (title.isBlank()) {
@@ -223,6 +251,34 @@ fun EditTaskPage(
         ) {
             DatePicker(state = datePickerState)
         }
+    }
+
+    if (isDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { isDeleteDialog = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        isDeleteDialog = false
+                        viewModel.deleteTask(viewModel.editedTask)
+                        viewModel.navigateBack()
+                    }
+                ) {
+                    Text("Delete", color = MaterialTheme.colorScheme.error)
+                }
+            },
+
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        isDeleteDialog = false
+                    }
+                ) {
+                    Text("Cancel")
+                }
+            },
+            title = { Text(text = "Delete Task") },
+        )
     }
 
     LaunchedEffect(Unit) {

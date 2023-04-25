@@ -86,6 +86,9 @@ dependencies {
     // Paging
     implementation 'androidx.paging:paging-compose:1.0.0-alpha18'
     implementation 'androidx.paging:paging-runtime:3.1.1'
+    // Room Paging
+    implementation "androidx.room:room-paging:2.5.1"
+
 
 
 //    Network
@@ -138,4 +141,14 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:21.0.1'
 //    implementation 'com.google.maps.android:maps-compose:1.0.0-alpha1'
     implementation 'com.google.maps.android:maps-compose:2.11.0'
+
+
+
+    // ML Kit com.example.english.translation.format.Translation
+    implementation 'com.google.mlkit:translate:17.0.1'
+
+
+    // android-opencc
+    implementation 'com.github.qichuan:android-opencc:1.2.0'
+
 }

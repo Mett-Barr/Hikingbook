@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.hikingbook.data.task.Task
+import com.example.hikingbook.tool.Translator
 import com.example.hikingbook.tool.toLongDate
 import com.example.hikingbook.ui.MainPage
 import com.example.hikingbook.ui.navigation.MainNavigation
@@ -62,6 +63,10 @@ class MainActivity : ComponentActivity() {
         checkAndRequestLocationPermission()
 //        roomTest()
 //        roomTestData()
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            Translator.downloadModel()
+        }
     }
 
     private fun checkAndRequestLocationPermission() {
